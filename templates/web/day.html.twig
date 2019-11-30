@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="example-wrapper">
+    <h1>Day {{ day }}</h1>
+    <a href="{{ path('index') }}">back</a>
+    <a href="https://adventofcode.com/2019/day/{{ day }}">Puzzle description</a>
+</div>
+{% endblock %}

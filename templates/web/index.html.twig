@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="example-wrapper">
+    <h1>Advent of Code 2019</h1>
+
+    <ol>
+        {% for i in 1..24 %}
+        <li>
+            <a href="{{ path('showDay', {day: i}) }}">Day {{ i }}</a>
+        </li>
+        {% endfor %}
+    </ol>
+</div>
+{% endblock %}
