@@ -45,4 +45,39 @@ $(document).ready(function () {
             }
         });
     });
+
+
+    $(".save").on("click", function (event) {
+        let button = $(event.target);
+        let puzzle = button.data('puzzle');
+        let part = button.data('part');
+        let textBox = $('#part' + part);
+        let value = textBox.val();
+
+        $.ajax({
+            url: '/save/solution',
+            type: 'POST',
+            dataType: 'json',
+            async: true,
+            data: {
+                puzzle: puzzle,
+                part: part,
+                value: value
+            },
+            success: function (data, status) {
+                if (data['error']) {
+                    let msgBox = $('<p>');
+                    msgBox.text(data['message']);
+                    msgBox.insertAfter(button);
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log(errorThrown);
+                alert('Ajax request failed.');
+            }
+        });
+    });
+
+
+
 });
