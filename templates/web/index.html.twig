@@ -4,12 +4,17 @@
 <div class="example-wrapper">
     <h1>Advent of Code 2019</h1>
 
-    <ol>
-        {% for i in 1..24 %}
-        <li>
-            <a class="button button--info" href="{{ path('showDay', {day: i}) }}">Day {{ i }}</a>
-        </li>
+    <div class="container">
+        {% for i in ['Su', 'M', 'T', 'W', 'R', 'F', 'Sa'] %}
+        <div class="element {% if loop.index0 == 0 or loop.index0 == 6 %}weekend{% else %}weekday{% endif %} ">
+            <span class="title header">{{ i }}</span>
+        </div>
         {% endfor %}
-    </ol>
+        {% for i in 1..24 %}
+        <a class="element day {% if loop.index0 % 2 == 0 %}day-even{% else %}day-uneven{% endif %}" href="{{ path('showDay', {day: i}) }}">
+            <span class="title">{{ i }}</span>
+        </a>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

@@ -49,8 +49,38 @@ body {
     background-color: #FF9999;
 }
 
-ol {
-    li {
-        margin: 4px 0;
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    .element {
+        background-color: #338c57;
+        margin: 10px 0 0 10px;
+        height: 100px;
+        width: calc(100% * (1/7) - 10px - 1px);
+        text-decoration: none;
+
+        .title {
+            font-size: 32px;
+            display: block;
+            text-align: center;
+            line-height: 100px;
+            &.header {
+                font-weight: bold;
+            }
+        }
+    }
+
+    .weekend {
+        background-color: #26643e;
+    }
+
+    .day-even {
+        background-color: #3aa84b;
+        color: yellowgreen;
+    }
+    .day-uneven {
+        background-color: #c43a35;
+        color: orange;
     }
 }
+
