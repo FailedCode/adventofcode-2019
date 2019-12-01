@@ -16,6 +16,7 @@
 
     {% if puzzleAvailable %}
         <a href="https://adventofcode.com/2019/day/{{ day }}">Puzzle description</a>
+        <a href="{{ path('showInput', {day: day}) }}">Puzzle Input</a>
     {% endif %}
 
     {% if puzzle %}

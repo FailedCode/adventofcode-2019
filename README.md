@@ -9,7 +9,7 @@ Solutions with PHP 7.2 and Symfony
   * `ddev ssh`
   * `composer install`
   * `cp .env.local.dist .env.local`
-    * set `AOC_SESSION` to the value of your `session` cookie in order to download they days puzzle input
+    * set `AOC_SESSION` to the value of your `session` cookie in order to download the days puzzle input
   * `php bin/console doctrine:migrations:migrate`
   * `yarn install`
   * `yarn encore dev`

@@ -6,6 +6,7 @@ use App\Entity\Puzzle;
 use App\Repository\PuzzleRepository;
 use App\Service\PuzzleService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -77,5 +78,34 @@ class WebController extends AbstractController
             'puzzle' => $puzzle,
             'puzzleAvailable' => $isAvailable,
         ]);
+    }
+
+    /**
+     * @Route("/day/{day}/input", name="showInput")
+     * @param int $day
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
+     */
+    public function showInput(int $day)
+    {
+        /** @var PuzzleRepository $puzzleRepo */
+        $puzzleRepo = $this->getDoctrine()->getRepository(Puzzle::class);
+        $puzzle = $puzzleRepo->findOneBy(['day' => $day, 'is_test' => false]);
+        $isAvailable = $this->puzzleService->isPuzzleAvailable($day);
+        $respone = new Response();
+        $respone->headers->set('Content-Type', 'text/plain');
+
+        if (!$isAvailable) {
+            $respone->setContent('Puzzle not yet available!');
+            return $respone;
+        }
+
+        if (is_null($puzzle)) {
+            $respone->setContent('Puzzle not yet downloaded!');
+        } else {
+            $respone->setContent($puzzle->getInput());
+        }
+
+        return $respone;
     }
 }
