@@ -13,32 +13,15 @@
     {% endfor %}
 
     <a href="{{ path('index') }}">back</a>
-    <a href="https://adventofcode.com/2019/day/{{ day }}">Puzzle description</a>
 
-    <p>
-        {% if puzzle.solution1 %}
-            <input id="part1" type="text" value="{{ puzzle.solution1 }}">
-        {% else %}
-            Part 1 not yet solved <br>
-            <input id="part1" type="text" value="">
-        {% endif %}
-    </p>
-    <button class="solve" data-day="{{ day }}" data-part="1" data-puzzle="{{ puzzle.id }}">Solve</button>
-    <button class="save" data-day="{{ day }}" data-part="1" data-puzzle="{{ puzzle.id }}">Save correct solution</button>
+    {% if puzzleAvailable %}
+        <a href="https://adventofcode.com/2019/day/{{ day }}">Puzzle description</a>
+    {% endif %}
 
-    <p>
-        {% if puzzle.solution2 %}
-            <input id="part2" type="text" value="{{ puzzle.solution2 }}">
-        {% else %}
-            Part 2 not yet solved <br>
-            <input id="part2" type="text" value="">
-        {% endif %}
-    </p>
-    <button class="solve" data-day="{{ day }}" data-part="2" data-puzzle="{{ puzzle.id }}">Solve</button>
-    <button class="save" data-day="{{ day }}" data-part="2" data-puzzle="{{ puzzle.id }}">Save correct solution</button>
+    {% if puzzle %}
+        {{ include('web/partials/partSolution.html.twig', {value: puzzle.solution1, part: 1}) }}
+        {{ include('web/partials/partSolution.html.twig', {value: puzzle.solution2, part: 2}) }}
+    {% endif %}
 
-    <p>{{ dateNow | date('Y-m-d-H-i') }}</p>
-    <p>{{ datePuzzleEnabled | date('Y-m-d-H-i') }}</p>
-    <p>{{ timeLeft }}</p>
 </div>
 {% endblock %}

@@ -1,0 +1,10 @@
+<p>
+    {% if value %}
+        <input id="part{{ part }}" type="text" value="{{ value }}">
+    {% else %}
+        Part {{ part }} not yet solved <br>
+        <input id="part{{ part }}" type="text" value="">
+    {% endif %}
+</p>
+<button class="solve" data-day="{{ day }}" data-part="{{ part }}" data-puzzle="{{ puzzle.id }}">Solve</button>
+<button class="save" data-day="{{ day }}" data-part="{{ part }}" data-puzzle="{{ puzzle.id }}">Save correct solution</button>

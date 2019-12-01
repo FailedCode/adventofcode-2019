@@ -52,6 +52,11 @@ class PuzzleService
             return false;
         }
 
+        if (!$this->isPuzzleAvailable()) {
+            $this->logger->error("This puzzle is not yet available!");
+            return false;
+        }
+
         $puzzle = $this->puzzleRepo->findOneBy(['day' => $day, 'is_test' => false]);
         if (!is_null($puzzle)) {
             $this->logger->error("Day $day was already downloaded");
@@ -89,6 +94,28 @@ class PuzzleService
         $this->entityManager->persist($puzzle);;
         $this->entityManager->flush();
 
+        return true;
+    }
+
+    /**
+     * Calculate the date and return true if the puzzle of this day should be available
+     * @param int $day
+     * @return boolean
+     */
+    public function isPuzzleAvailable(int $day)
+    {
+        try {
+            $dateNow = new \DateTime();
+            $datePuzzleEnabled = \DateTime::createFromFormat('Y-m-d-H-i', "2019-12-$day-06-00");
+            $timeLeft = $datePuzzleEnabled->diff($dateNow);
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            return false;
+        }
+
+        if ($timeLeft->invert) {
+            return false;
+        }
         return true;
     }
 }

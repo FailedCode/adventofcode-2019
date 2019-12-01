@@ -51,8 +51,8 @@ class WebController extends AbstractController
         /** @var PuzzleRepository $puzzleRepo */
         $puzzleRepo = $this->getDoctrine()->getRepository(Puzzle::class);
         $puzzle = $puzzleRepo->findOneBy(['day' => $day, 'is_test' => false]);
-
-        if (is_null($puzzle)) {
+        $isAvailable = $this->puzzleService->isPuzzleAvailable($day);
+        if ($isAvailable && is_null($puzzle)) {
             $this->addFlash(
                 'notice',
                 'this puzzle was not yet downloaded'
@@ -65,16 +65,17 @@ class WebController extends AbstractController
             }
         }
 
-        $dateNow = new \DateTime();
-        $datePuzzleEnabled = \DateTime::createFromFormat('Y-m-d-H-i', "2019-12-$day-06-00");
-        $timeLeft = $dateNow->diff($datePuzzleEnabled);
+        if (!$isAvailable) {
+            $this->addFlash(
+                'notice',
+                'This puzzle is not yet available'
+            );
+        }
 
         return $this->render('web/day.html.twig', [
             'day' => $day,
             'puzzle' => $puzzle,
-            'dateNow' => $dateNow,
-            'datePuzzleEnabled' => $datePuzzleEnabled,
-            'timeLeft' => $timeLeft->format('%d:%h:%i:%s'),
+            'puzzleAvailable' => $isAvailable,
         ]);
     }
 }
