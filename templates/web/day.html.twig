@@ -22,6 +22,8 @@
             Part 1 not yet solved
         {% endif %}
     </p>
+    <button class="solve" data-day="{{ day }}" data-part="1" data-puzzle="{{ puzzle.id }}">Solve</button>
+    <input id="part1" type="text" class="hidden" value="">
 
     <p>
         {% if puzzle.solution2 %}
@@ -30,6 +32,8 @@
             Part 2 not yet solved
         {% endif %}
     </p>
+    <button class="solve" data-day="{{ day }}" data-part="2" data-puzzle="{{ puzzle.id }}">Solve</button>
+    <input id="part1" type="text" class="hidden" value="">
 
     <p>{{ dateNow | date('Y-m-d-H-i') }}</p>
     <p>{{ datePuzzleEnabled | date('Y-m-d-H-i') }}</p>

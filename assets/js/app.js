@@ -9,6 +9,40 @@
 require('../css/app.css');
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to require it.
-// const $ = require('jquery');
+const $ = require('jquery');
 
-console.log('Hello Webpack Encore! Edit me in assets/js/app.js');
+$(document).ready(function () {
+    $(".solve").on("click", function (event) {
+        let button = $(event.target);
+        let day = button.data('day');
+        let part = button.data('part');
+        let puzzle = button.data('puzzle');
+
+        $.ajax({
+            url: '/solve/day/' + day,
+            type: 'POST',
+            dataType: 'json',
+            async: true,
+            data: {
+                day: day,
+                part: part,
+                puzzle: puzzle,
+            },
+            success: function (data, status) {
+                let partId = '#part'+part;
+                let textBox = $(partId);
+                let result = '';
+                if (data['error']) {
+                    result = data['message'];
+                } else {
+                    result = data['part'+part];
+                }
+                textBox.val(result);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log(errorThrown);
+                alert('Ajax request failed.');
+            }
+        });
+    });
+});
