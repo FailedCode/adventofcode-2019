@@ -6,7 +6,7 @@
  */
 
 // any CSS you require will output into a single css file (app.css in this case)
-require('../css/app.css');
+require('../css/app.scss');
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to require it.
 const $ = require('jquery');
@@ -34,8 +34,10 @@ $(document).ready(function () {
                 let result = '';
                 if (data['error']) {
                     result = data['message'];
+                    textBox.addClass('updated--error');
                 } else {
                     result = data['part'+part];
+                    textBox.addClass('updated');
                 }
                 textBox.val(result);
             },
@@ -65,6 +67,7 @@ $(document).ready(function () {
                 value: value
             },
             success: function (data, status) {
+                textBox.removeClass('updated');
                 if (data['error']) {
                     let msgBox = $('<p>');
                     msgBox.text(data['message']);

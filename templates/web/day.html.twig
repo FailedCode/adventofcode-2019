@@ -6,17 +6,17 @@
 
     {% for label, messages in app.flashes %}
         {% for message in messages %}
-            <div class="flash-{{ label }}">
+            <div class="flash flash-{{ label }}">
                 {{ message }}
             </div>
         {% endfor %}
     {% endfor %}
 
-    <a href="{{ path('index') }}">back</a>
+    <a class="button" href="{{ path('index') }}">back</a>
 
     {% if puzzleAvailable %}
-        <a href="https://adventofcode.com/2019/day/{{ day }}">Puzzle description</a>
-        <a href="{{ path('showInput', {day: day}) }}">Puzzle Input</a>
+        <a class="button button--info" href="https://adventofcode.com/2019/day/{{ day }}">Puzzle description</a>
+        <a class="button button--info" href="{{ path('showInput', {day: day}) }}">Puzzle Input</a>
     {% endif %}
 
     {% if puzzle %}

@@ -1,0 +1,56 @@
+body {
+    background-color: #e0e0e0;
+}
+
+.button {
+    display: inline-block;
+    background-color: #999999;
+    border-radius: 5px;
+    border-style: none;
+    cursor: pointer;
+    padding: 5px;
+
+    text-decoration: none;
+    color: #222222;
+    &:visited {
+        color: #332222;
+    }
+    &:hover {
+        background-color: #777777;
+    }
+}
+
+.button--info {
+    background-color: #9999FF;
+}
+.button--warn {
+    background-color: #FF9999;
+}
+.button--yes {
+    background-color: #99FF99;
+}
+
+.updated {
+    border-color: greenyellow;
+    border-radius: 5px;
+}
+.updated--error {
+    border-color: red;
+    border-radius: 5px;
+}
+
+.flash {
+    padding: 5px;
+}
+.flash-notice {
+    background-color: #9999FF;
+}
+.flash-warn {
+    background-color: #FF9999;
+}
+
+ol {
+    li {
+        margin: 4px 0;
+    }
+}
