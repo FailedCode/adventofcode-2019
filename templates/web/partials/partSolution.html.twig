@@ -1,12 +1,7 @@
 
 <h2>Part {{ part }}</h2>
 <p>
-    {% if value %}
-        <input id="part{{ part }}" type="text" value="{{ value }}">
-    {% else %}
-        Part {{ part }} not yet solved <br>
-        <input id="part{{ part }}" type="text" value="">
-    {% endif %}
+    <input id="part{{ part }}" type="text" value="{{ value }}" placeholder="Part {{ part }} not yet solved">
 </p>
 <button class="solve button button--yes" data-day="{{ day }}" data-part="{{ part }}" data-puzzle="{{ puzzle.id }}">Solve</button>
 <button class="save button button--warn" data-day="{{ day }}" data-part="{{ part }}" data-puzzle="{{ puzzle.id }}">Save correct solution</button>
