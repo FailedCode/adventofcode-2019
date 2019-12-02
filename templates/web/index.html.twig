@@ -10,9 +10,9 @@
             <span class="title header">{{ i }}</span>
         </div>
         {% endfor %}
-        {% for i in 1..24 %}
-        <a class="element day {% if loop.index0 % 2 == 0 %}day-even{% else %}day-uneven{% endif %}" href="{{ path('showDay', {day: i}) }}">
-            <span class="title">{{ i }}</span>
+        {% for d, available in days %}
+        <a class="element day {% if loop.index0 % 2 == 0 %}day-even{% else %}day-uneven{% endif %} {% if not available %}unavailable{% endif %}" href="{{ path('showDay', {day: d}) }}">
+            <span class="title">{{ d }}</span>
         </a>
         {% endfor %}
     </div>
