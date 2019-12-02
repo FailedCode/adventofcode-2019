@@ -61,6 +61,7 @@ class WebController extends AbstractController
             $downloadSuccess = $this->puzzleService->downloadInput($day);
             if ($downloadSuccess) {
                 $this->addFlash('success', 'Puzzle input downloaded!');
+                $puzzle = $puzzleRepo->findOneBy(['day' => $day, 'is_test' => false]);
             } else {
                 $this->addFlash('error', 'Puzzle download failed! Check logfile for more information.');
             }

@@ -45,8 +45,11 @@ body {
 .flash-notice {
     background-color: #9999FF;
 }
-.flash-warn {
+.flash-error {
     background-color: #FF9999;
+}
+.flash-success {
+    background-color: #99FF99;
 }
 
 .container {

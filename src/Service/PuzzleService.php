@@ -52,7 +52,7 @@ class PuzzleService
             return false;
         }
 
-        if (!$this->isPuzzleAvailable()) {
+        if (!$this->isPuzzleAvailable($day)) {
             $this->logger->error("This puzzle is not yet available!");
             return false;
         }
