@@ -21,11 +21,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class PuzzleController extends AbstractController
 {
     /**
-     * @var int
-     */
-    protected $day = 0;
-
-    /**
      * @var PuzzleService
      */
     protected $puzzleService;
@@ -55,13 +50,6 @@ class PuzzleController extends AbstractController
         $this->logger = $logger;
         $this->entityManager = $em;
         $this->puzzleRepo = $em->getRepository(Puzzle::class);
-        // self:: refers to the scope at the point of definition not at the point of execution
-        // https://stackoverflow.com/questions/151969/when-to-use-self-over-this
-        // self::class will result in
-        //   Dynamic class names are not allowed in compile-time ::class fetch in <file>
-        if (preg_match('~Day(\d+)~', static::class, $match)) {
-            $this->day = (int)$match[1];
-        }
     }
 
     /**
@@ -114,8 +102,7 @@ class PuzzleController extends AbstractController
             $this->logger->error("Class '$solverClass' not implementet!");
             return $this->json(['error' => true, 'message' => "Class '$solverClass' not implementet!"]);
         }
-        $solver = new $solverClass();
-        $solver->setPuzzle($puzzle);
+        $solver = new $solverClass($puzzle, $this->logger);
 
         $result = [];
         if ($part == 1 || $part == 0) {

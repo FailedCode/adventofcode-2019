@@ -5,20 +5,28 @@ namespace App\Service;
 
 
 use App\Entity\Puzzle;
+use Psr\Log\LoggerInterface;
 
 abstract class AbstractDaySolver
 {
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     /**
      * @var Puzzle
      */
     protected $puzzle;
 
     /**
-     * @param Puzzle $puzzle
+     * AbstractDaySolver constructor.
+     * @param LoggerInterface $logger
      */
-    public function setPuzzle(Puzzle $puzzle)
+    public function __construct(Puzzle $puzzle, LoggerInterface $logger)
     {
         $this->puzzle = $puzzle;
+        $this->logger = $logger;
     }
 
     /**
