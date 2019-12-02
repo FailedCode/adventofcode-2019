@@ -38,7 +38,7 @@ class WebController extends AbstractController
     public function index()
     {
         $days = [];
-        for ($d = 1; $d < 25; $d++) {
+        for ($d = 1; $d <= 25; $d++) {
             $days[$d] = $this->puzzleService->isPuzzleAvailable($d);
         }
         return $this->render('web/index.html.twig', [
