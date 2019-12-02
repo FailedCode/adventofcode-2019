@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Puzzle;
 use App\Repository\PuzzleRepository;
+use App\Service\AbstractDaySolver;
 use App\Service\PuzzleService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -17,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @package App\Controller
  */
-abstract class PuzzleController extends AbstractController
+class PuzzleController extends AbstractController
 {
     /**
      * @var int
@@ -38,11 +39,6 @@ abstract class PuzzleController extends AbstractController
      * @var EntityManagerInterface
      */
     protected $entityManager;
-
-    /**
-     * @var Puzzle
-     */
-    protected $puzzle;
 
     /**
      * @var PuzzleRepository
@@ -77,21 +73,62 @@ abstract class PuzzleController extends AbstractController
     {
         $part = (int)$request->get('part', 0);
         $puzzleId = (int)$request->get('puzzle', 0);
-        $this->puzzle = $this->puzzleRepo->find($puzzleId);
-        if (!$puzzleId || is_null($this->puzzle)) {
+        $puzzle = $this->puzzleRepo->find($puzzleId);
+        if (!$puzzleId || is_null($puzzle)) {
             $this->logger->error("No Puzzle-ID");
             return $this->json(['error' => true, 'message' => "No Puzzle! ($puzzleId)"]);
         }
 
         if ($part == 1) {
-            $this->puzzle->setSolution1($request->get('value'));
+            $puzzle->setSolution1($request->get('value'));
         }
         if ($part == 2) {
-            $this->puzzle->setSolution2($request->get('value'));
+            $puzzle->setSolution2($request->get('value'));
         }
-        $this->entityManager->persist($this->puzzle);
+        $this->entityManager->persist($puzzle);
         $this->entityManager->flush();
 
         return $this->json([]);
+    }
+
+    /**
+     * @Route("solve/day/{day}", name="solveDay")
+     * @param Request $request
+     * @param int $day
+     * @return JsonResponse
+     */
+    public function solve(Request $request, int $day)
+    {
+        $part = (int)$request->get('part', 0);
+        $puzzleId = (int)$request->get('puzzle', 0);
+        $puzzle = $this->puzzleRepo->find($puzzleId);
+        if (!$puzzleId || is_null($puzzle)) {
+            $this->logger->error("No Puzzle-ID");
+            return $this->json(['error' => true, 'message' => "No Puzzle! ($puzzleId)"]);
+        }
+
+        $n = str_pad($day, 2, '0', STR_PAD_LEFT);
+        $solverClass = "App\Service\Day{$n}Solver";
+        /** @var AbstractDaySolver $solver */
+        if (!class_exists($solverClass)) {
+            $this->logger->error("Class '$solverClass' not implementet!");
+            return $this->json(['error' => true, 'message' => "Class '$solverClass' not implementet!"]);
+        }
+        $solver = new $solverClass();
+        $solver->setPuzzle($puzzle);
+
+        $result = [];
+        if ($part == 1 || $part == 0) {
+            $part1Solution = $solver->part1();
+            $result['part1'] = $part1Solution;
+            $this->logger->info("Part1 : $part1Solution");
+        }
+        if ($part == 2 || $part == 0) {
+            $part2Solution = $solver->part2();
+            $result['part2'] = $part2Solution;
+            $this->logger->info("Part2 : $part2Solution");
+        }
+
+        return $this->json($result);
     }
 }
