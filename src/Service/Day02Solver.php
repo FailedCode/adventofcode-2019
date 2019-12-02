@@ -16,6 +16,20 @@ class Day02Solver extends AbstractDaySolver
 
     public function part2()
     {
+        $program = $this->getInputFormated();
+        $target = 19690720;
+
+        for ($noun = 0; $noun <= 99; $noun++) {
+            for ($verb = 0; $verb <= 99; $verb++) {
+                $program[1] = $noun;
+                $program[2] = $verb;
+                if ($this->runProgramm($program) == $target) {
+                    return 100 * $noun + $verb;
+                }
+            }
+        }
+
+        return 'Target missed';
     }
 
     /**
