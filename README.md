@@ -15,6 +15,9 @@ Solutions with PHP 7.2 and Symfony
   * `yarn encore dev`
   * visit https://adventofcode-2019.ddev.site/ and select a day
 
+### Usage
+  * Add a new solution: `php bin/console make:daysolver`
+
 ## Inital setup
   * `ddev config` 
   * `ddev ssh`
