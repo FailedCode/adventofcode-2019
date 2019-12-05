@@ -118,4 +118,48 @@ class PuzzleController extends AbstractController
 
         return $this->json($result);
     }
+
+    /**
+     * @Route("test/day/{day}", name="testDay")
+     * @param Request $request
+     * @param int $day
+     * @return JsonResponse
+     */
+    public function test(Request $request, int $day)
+    {
+        $part = (int)$request->get('part', 0);
+        $puzzleId = (int)$request->get('puzzle', 0);
+        $puzzle = $this->puzzleRepo->find($puzzleId);
+        if (!$puzzleId || is_null($puzzle)) {
+            $this->logger->error("No Puzzle-ID");
+            return $this->json(['error' => true, 'message' => "No Puzzle! ($puzzleId)"]);
+        }
+
+        $n = str_pad($day, 2, '0', STR_PAD_LEFT);
+        $solverClass = "App\Service\Day{$n}Solver";
+        /** @var AbstractDaySolver $solver */
+        if (!class_exists($solverClass)) {
+            $this->logger->error("Class '$solverClass' not implementet!");
+            return $this->json(['error' => true, 'message' => "Class '$solverClass' not implementet!"]);
+        }
+        $solver = new $solverClass($puzzle, $this->logger);
+
+        $result = [];
+        if ($part == 1 || $part == 0) {
+            $part1Solution = $solver->part1();
+            $result['part1'] = [
+                'equal' => $puzzle->getSolution1() == $part1Solution,
+                'value' => $part1Solution,
+            ];
+        }
+        if ($part == 2 || $part == 0) {
+            $part2Solution = $solver->part2();
+            $result['part2'] = [
+                'equal' => $puzzle->getSolution2() == $part2Solution,
+                'value' => $part2Solution,
+            ];
+        }
+
+        return $this->json($result);
+    }
 }

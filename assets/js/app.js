@@ -100,6 +100,35 @@ $(document).ready(function () {
         });
     });
 
+    $(".test-action").on("click", function (event) {
+        let button = $(event.target);
+        let day = button.data('day');
+        let part = button.data('part');
+        let puzzle = button.data('puzzle');
 
+        $.ajax({
+            url: '/test/day/' + day,
+            type: 'POST',
+            dataType: 'json',
+            async: true,
+            data: {
+                day: day,
+                part: part,
+                puzzle: puzzle,
+            },
+            success: function (data, status) {
+                let result = data['part'+part];
+                if (result['equal'] === true) {
+                    addFlashMessage('success', `OK!`);
+                } else {
+                    addFlashMessage('warn', `Result doesn't match<br>${result['value']}`);
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log(errorThrown);
+                addFlashMessage('warn', `Ajax request failed.<br>${errorThrown}`);
+            }
+        });
+    });
 
 });
