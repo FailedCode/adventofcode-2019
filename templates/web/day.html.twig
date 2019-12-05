@@ -4,13 +4,16 @@
 <div class="example-wrapper">
     <h1>Day {{ day }}</h1>
 
-    {% for label, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="flash flash-{{ label }}">
-                {{ message }}
-            </div>
+    <div id="messageContainer">
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="flash flash-{{ label }}">
+                    <div class="flash-message">{{ message }}</div>
+                    <div class="flash-close">X</div>
+                </div>
+            {% endfor %}
         {% endfor %}
-    {% endfor %}
+    </div>
 
     <a class="button" href="{{ path('index') }}">back</a>
 

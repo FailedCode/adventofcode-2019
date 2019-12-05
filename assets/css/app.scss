@@ -41,11 +41,28 @@ body {
 
 .flash {
     padding: 5px;
+    max-width: 600px;
+    margin: 5px auto;
+    border-radius: 5px;
+    position: relative;
+    .flash-close {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 12px;
+        height: 12px;
+        line-height: 12px;
+        border-radius: 100%;
+        border: solid black 2px;
+        text-align: center;
+        padding: 4px;
+        cursor: pointer;
+    }
 }
-.flash-notice {
+.flash-info {
     background-color: #9999FF;
 }
-.flash-error {
+.flash-warn {
     background-color: #FF9999;
 }
 .flash-success {

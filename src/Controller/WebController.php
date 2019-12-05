@@ -60,7 +60,7 @@ class WebController extends AbstractController
         $isAvailable = $this->puzzleService->isPuzzleAvailable($day);
         if ($isAvailable && is_null($puzzle)) {
             $this->addFlash(
-                'notice',
+                'info',
                 'this puzzle was not yet downloaded'
             );
             $downloadSuccess = $this->puzzleService->downloadInput($day);
@@ -68,13 +68,13 @@ class WebController extends AbstractController
                 $this->addFlash('success', 'Puzzle input downloaded!');
                 $puzzle = $puzzleRepo->findOneBy(['day' => $day, 'is_test' => false]);
             } else {
-                $this->addFlash('error', 'Puzzle download failed! Check logfile for more information.');
+                $this->addFlash('warn', 'Puzzle download failed! Check logfile for more information.');
             }
         }
 
         if (!$isAvailable) {
             $this->addFlash(
-                'notice',
+                'info',
                 'This puzzle is not yet available'
             );
         }

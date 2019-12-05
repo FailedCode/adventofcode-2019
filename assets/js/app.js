@@ -11,8 +11,27 @@ require('../css/app.scss');
 // Need jQuery? Install it with "yarn add jquery", then uncomment to require it.
 const $ = require('jquery');
 
+function addFlashMessage(label, message) {
+    $container = $('#messageContainer');
+    if ($container) {
+        $flash = $(`<div class="flash flash-${ label }"><div class="flash-message">${ message }</div><div class="flash-close">X</div></div>`);
+        $container.append($flash);
+        bindFlashClose();
+    }
+}
+
+function bindFlashClose() {
+    $('.flash-close').on("click", function (event) {
+        let closer = $(event.target);
+        closer.parent().remove();
+    });
+}
+
 $(document).ready(function () {
-    $(".solve").on("click", function (event) {
+
+    bindFlashClose();
+
+    $(".solve-action").on("click", function (event) {
         let button = $(event.target);
         let day = button.data('day');
         let part = button.data('part');
@@ -43,13 +62,13 @@ $(document).ready(function () {
             },
             error: function (xhr, textStatus, errorThrown) {
                 console.log(errorThrown);
-                alert('Ajax request failed.');
+                addFlashMessage('warn', `Ajax request failed.<br>${errorThrown}`);
             }
         });
     });
 
 
-    $(".save").on("click", function (event) {
+    $(".save-action").on("click", function (event) {
         let button = $(event.target);
         let puzzle = button.data('puzzle');
         let part = button.data('part');
@@ -69,14 +88,14 @@ $(document).ready(function () {
             success: function (data, status) {
                 textBox.removeClass('updated');
                 if (data['error']) {
-                    let msgBox = $('<p>');
-                    msgBox.text(data['message']);
-                    msgBox.insertAfter(button);
+                    addFlashMessage('warn', 'error:<br>' . data['message']);
+                } else {
+                    addFlashMessage('success', 'saved');
                 }
             },
             error: function (xhr, textStatus, errorThrown) {
                 console.log(errorThrown);
-                alert('Ajax request failed.');
+                addFlashMessage('warn', `Ajax request failed.<br>${errorThrown}`);
             }
         });
     });
