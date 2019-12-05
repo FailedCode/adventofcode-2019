@@ -48,17 +48,16 @@ $(document).ready(function () {
                 puzzle: puzzle,
             },
             success: function (data, status) {
-                let partId = '#part'+part;
-                let textBox = $(partId);
-                let result = '';
                 if (data['error']) {
-                    result = data['message'];
-                    textBox.addClass('updated--error');
+                    addFlashMessage('warn', `Error:<br>${data['message']}`);
                 } else {
-                    result = data['part'+part];
-                    textBox.addClass('updated');
+                    let result = data['part'+part];
+                    if (result) {
+                        addFlashMessage('success', `Success:<br>${result}`);
+                    } else {
+                        addFlashMessage('warn', 'Empty result!');
+                    }
                 }
-                textBox.val(result);
             },
             error: function (xhr, textStatus, errorThrown) {
                 console.log(errorThrown);
