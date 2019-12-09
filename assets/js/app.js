@@ -53,6 +53,7 @@ $(document).ready(function () {
                 } else {
                     let result = data['part'+part];
                     if (result) {
+                        $('#part'+part).val(result);
                         addFlashMessage('success', `Success:<br>${result}`);
                     } else {
                         addFlashMessage('warn', 'Empty result!');
