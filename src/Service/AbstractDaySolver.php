@@ -21,6 +21,7 @@ abstract class AbstractDaySolver
 
     /**
      * AbstractDaySolver constructor.
+     * @param Puzzle $puzzle
      * @param LoggerInterface $logger
      */
     public function __construct(Puzzle $puzzle, LoggerInterface $logger)
