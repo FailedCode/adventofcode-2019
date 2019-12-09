@@ -17,6 +17,13 @@ class Day05Solver extends AbstractDaySolver
 
     public function part2()
     {
+        $program = $this->getInputFormated();
+        $computer = new IntcodeComputer();
+        $computer->setCode($program);
+        $computer->addInput(5);
+        $computer->runProgram();
+        $output = $computer->getOutput();
+        return array_pop($output);
     }
 
     /**

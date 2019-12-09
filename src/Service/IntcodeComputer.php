@@ -9,6 +9,10 @@ class IntcodeComputer
     const OPCODE_MULTIPLY = 2;
     const OPCODE_INPUT = 3;
     const OPCODE_OUTPUT = 4;
+    const OPCODE_JMP_IF_TRUE = 5;
+    const OPCODE_JMP_IF_FALSE = 6;
+    const OPCODE_LESSTHAN = 7;
+    const OPCODE_EQUALS = 8;
     const OPCODE_HALT = 99;
 
     /**
@@ -22,6 +26,10 @@ class IntcodeComputer
         self::OPCODE_MULTIPLY => 4,
         self::OPCODE_INPUT => 2,
         self::OPCODE_OUTPUT => 2,
+        self::OPCODE_JMP_IF_TRUE => 3,
+        self::OPCODE_JMP_IF_FALSE => 3,
+        self::OPCODE_LESSTHAN => 4,
+        self::OPCODE_EQUALS => 4,
         self::OPCODE_HALT => 1,
     ];
 
@@ -123,6 +131,32 @@ class IntcodeComputer
                 case self::OPCODE_OUTPUT:
                     $p = $modes[0] ? $params[0] : $this->code[$params[0]];
                     $this->addOutPut($p);
+                    break;
+                case self::OPCODE_JMP_IF_TRUE:
+                    $p1 = $modes[0] ? $params[0] : $this->code[$params[0]];
+                    $p2 = $modes[1] ? $params[1] : $this->code[$params[1]];
+                    if ($p1 != 0) {
+                        $this->p = $p2;
+                        continue 2;
+                    }
+                    break;
+                case self::OPCODE_JMP_IF_FALSE:
+                    $p1 = $modes[0] ? $params[0] : $this->code[$params[0]];
+                    $p2 = $modes[1] ? $params[1] : $this->code[$params[1]];
+                    if ($p1 == 0) {
+                        $this->p = $p2;
+                        continue 2;
+                    }
+                    break;
+                case self::OPCODE_LESSTHAN:
+                    $p1 = $modes[0] ? $params[0] : $this->code[$params[0]];
+                    $p2 = $modes[1] ? $params[1] : $this->code[$params[1]];
+                    $this->code[$params[2]] = ($p1 < $p2) ? 1 : 0;
+                    break;
+                case self::OPCODE_EQUALS:
+                    $p1 = $modes[0] ? $params[0] : $this->code[$params[0]];
+                    $p2 = $modes[1] ? $params[1] : $this->code[$params[1]];
+                    $this->code[$params[2]] = ($p1 == $p2) ? 1 : 0;
                     break;
                 case self::OPCODE_HALT:
                     return;

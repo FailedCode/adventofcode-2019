@@ -29,3 +29,7 @@ Solutions with PHP 7.2 and Symfony
   * `composer require symfony/webpack-encore-bundle`
   * `yarn install`
   * `yarn add jquery`
+  
+## Lessons learnt
+
+  * [In PHP the switch statement is considered a looping structure for the purposes of continue.](https://www.php.net/manual/en/control-structures.continue.php) 
