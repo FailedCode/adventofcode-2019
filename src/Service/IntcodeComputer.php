@@ -116,46 +116,46 @@ class IntcodeComputer
 
             switch ($opcode) {
                 case self::OPCODE_ADD:
-                    $p1 = $modes[0] ? $params[0] : $this->code[$params[0]];
-                    $p2 = $modes[1] ? $params[1] : $this->code[$params[1]];
+                    $p1 = $this->getParam(0, $modes, $params);
+                    $p2 = $this->getParam(1, $modes, $params);
                     $this->code[$params[2]] = $p1 + $p2;
                     break;
                 case self::OPCODE_MULTIPLY:
-                    $p1 = $modes[0] ? $params[0] : $this->code[$params[0]];
-                    $p2 = $modes[1] ? $params[1] : $this->code[$params[1]];
+                    $p1 = $this->getParam(0, $modes, $params);
+                    $p2 = $this->getParam(1, $modes, $params);
                     $this->code[$params[2]] = $p1 * $p2;
                     break;
                 case self::OPCODE_INPUT:
                     $this->code[$params[0]] = $this->getInput();
                     break;
                 case self::OPCODE_OUTPUT:
-                    $p = $modes[0] ? $params[0] : $this->code[$params[0]];
+                    $p = $this->getParam(0, $modes, $params);
                     $this->addOutPut($p);
                     break;
                 case self::OPCODE_JMP_IF_TRUE:
-                    $p1 = $modes[0] ? $params[0] : $this->code[$params[0]];
-                    $p2 = $modes[1] ? $params[1] : $this->code[$params[1]];
+                    $p1 = $this->getParam(0, $modes, $params);
+                    $p2 = $this->getParam(1, $modes, $params);
                     if ($p1 != 0) {
                         $this->p = $p2;
                         continue 2;
                     }
                     break;
                 case self::OPCODE_JMP_IF_FALSE:
-                    $p1 = $modes[0] ? $params[0] : $this->code[$params[0]];
-                    $p2 = $modes[1] ? $params[1] : $this->code[$params[1]];
+                    $p1 = $this->getParam(0, $modes, $params);
+                    $p2 = $this->getParam(1, $modes, $params);
                     if ($p1 == 0) {
                         $this->p = $p2;
                         continue 2;
                     }
                     break;
                 case self::OPCODE_LESSTHAN:
-                    $p1 = $modes[0] ? $params[0] : $this->code[$params[0]];
-                    $p2 = $modes[1] ? $params[1] : $this->code[$params[1]];
+                    $p1 = $this->getParam(0, $modes, $params);
+                    $p2 = $this->getParam(1, $modes, $params);
                     $this->code[$params[2]] = ($p1 < $p2) ? 1 : 0;
                     break;
                 case self::OPCODE_EQUALS:
-                    $p1 = $modes[0] ? $params[0] : $this->code[$params[0]];
-                    $p2 = $modes[1] ? $params[1] : $this->code[$params[1]];
+                    $p1 = $this->getParam(0, $modes, $params);
+                    $p2 = $this->getParam(1, $modes, $params);
                     $this->code[$params[2]] = ($p1 == $p2) ? 1 : 0;
                     break;
                 case self::OPCODE_HALT:
@@ -200,5 +200,16 @@ class IntcodeComputer
             $params[] = $value;
         }
         return $params;
+    }
+
+    /**
+     * @param int $n
+     * @param array $modes
+     * @param array $params
+     * @return int|mixed
+     */
+    protected function getParam($n, $modes, $params)
+    {
+        return $modes[$n] ? $params[$n] : $this->code[$params[$n]];
     }
 }
