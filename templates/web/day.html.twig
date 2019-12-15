@@ -18,7 +18,7 @@
     <a class="button" href="{{ path('index') }}">back</a>
 
     {% if puzzleAvailable %}
-        <a class="button button--info" href="https://adventofcode.com/2019/day/{{ day }}">Puzzle description</a>
+        <a class="button button--info" href="https://adventofcode.com/2019/day/{{ day }}" target="_blank">Puzzle description</a>
         <a class="button button--info" href="{{ path('showInput', {day: day}) }}">Puzzle Input</a>
     {% endif %}
 
