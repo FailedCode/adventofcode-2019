@@ -87,6 +87,19 @@ class IntcodeComputer
     protected $instructionCounter = 0;
 
     /**
+     * @var bool
+     */
+    protected $hasHaltet = false;
+
+    /**
+     * @return bool
+     */
+    public function hasHaltet()
+    {
+        return $this->hasHaltet;
+    }
+
+    /**
      * Add input from outside
      * @param int $value
      */
@@ -144,7 +157,7 @@ class IntcodeComputer
         $this->logger->info("Set new Logger!");
     }
 
-    public function runProgram()
+    public function runProgram($pauseOnOutput = false)
     {
         $this->logger->info("runProgram");
         while (true) {
@@ -178,6 +191,10 @@ class IntcodeComputer
                     $this->logger->info("OUTPUT");
                     $p = $this->getParam(0, $modes, $params);
                     $this->addOutPut($p);
+                    if ($pauseOnOutput) {
+                        $this->p += $skipInstructions;
+                        return;
+                    }
                     break;
                 case self::OPCODE_JMP_IF_TRUE:
                     $this->logger->info("JMP IF TRUE");
@@ -215,6 +232,7 @@ class IntcodeComputer
                     break;
                 case self::OPCODE_HALT:
                     $this->logger->info("HALT");
+                    $this->hasHaltet = true;
                     return;
                 default:
                     throw new \Exception("OpCode $opcode not yet implemented!");
