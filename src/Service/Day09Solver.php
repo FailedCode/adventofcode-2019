@@ -12,12 +12,18 @@ class Day09Solver extends AbstractDaySolver
         $computer->addInput(1);
         $computer->runProgram();
         $output = $computer->getOutput();
-        $this->logger->info("output", $output);
         return array_pop($output);
     }
 
     public function part2()
     {
+        $program = $this->getInputFormated();
+        $computer = new IntcodeComputer();
+        $computer->setCode($program);
+        $computer->addInput(2);
+        $computer->runProgram();
+        $output = $computer->getOutput();
+        return array_pop($output);
     }
 
     /**
