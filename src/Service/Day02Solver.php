@@ -6,7 +6,7 @@ class Day02Solver extends AbstractDaySolver
 {
     public function part1()
     {
-        $program = $this->getInputFormated();
+        $program = $this->getInputIntcode();
         $program[1] = 12;
         $program[2] = 2;
         $computer = new IntcodeComputer();
@@ -17,7 +17,7 @@ class Day02Solver extends AbstractDaySolver
 
     public function part2()
     {
-        $program = $this->getInputFormated();
+        $program = $this->getInputIntcode();
         $target = 19690720;
 
         for ($noun = 0; $noun <= 99; $noun++) {
@@ -34,14 +34,5 @@ class Day02Solver extends AbstractDaySolver
         }
 
         return 'Target missed';
-    }
-
-    /**
-     * @return array
-     */
-    protected function getInputFormated()
-    {
-        $input = $this->puzzle->getInput();
-        return array_map(function ($value){ return (int)$value; }, explode(",", $input));
     }
 }

@@ -48,4 +48,13 @@ abstract class AbstractDaySolver
         $input = $this->puzzle->getInput();
         return array_filter(explode("\n", $input), 'strlen');
     }
+
+    /**
+     * @return array
+     */
+    protected function getInputIntcode()
+    {
+        $input = $this->puzzle->getInput();
+        return array_map(function ($value){ return (int)$value; }, explode(",", $input));
+    }
 }

@@ -6,7 +6,7 @@ class Day07Solver extends AbstractDaySolver
 {
     public function part1()
     {
-        $program = $this->getInputFormated();
+        $program = $this->getInputIntcode();
 
         $phaseCombinations = $this->createPhaseSettings();
 
@@ -32,7 +32,7 @@ class Day07Solver extends AbstractDaySolver
 
     public function part2()
     {
-        $program = $this->getInputFormated();
+        $program = $this->getInputIntcode();
 
         $phaseCombinations = $this->createPhaseSettings(5, 9);
 
@@ -115,14 +115,5 @@ class Day07Solver extends AbstractDaySolver
         }
 
         return $result;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getInputFormated()
-    {
-        $input = $this->puzzle->getInput();
-        return array_map(function ($value){ return (int)$value; }, explode(",", $input));
     }
 }

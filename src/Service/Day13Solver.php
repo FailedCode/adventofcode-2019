@@ -6,7 +6,7 @@ class Day13Solver extends AbstractDaySolver
 {
     public function part1()
     {
-        $program = $this->getInputFormated();
+        $program = $this->getInputIntcode();
         $computer = new IntcodeComputer();
         $computer->setCode($program);
         $computer->runProgram();
@@ -24,14 +24,5 @@ class Day13Solver extends AbstractDaySolver
 
     public function part2()
     {
-    }
-
-    /**
-     * @return array
-     */
-    protected function getInputFormated()
-    {
-        $input = $this->puzzle->getInput();
-        return array_map(function ($value){ return (int)$value; }, explode(",", $input));
     }
 }

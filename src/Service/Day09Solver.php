@@ -6,7 +6,7 @@ class Day09Solver extends AbstractDaySolver
 {
     public function part1()
     {
-        $program = $this->getInputFormated();
+        $program = $this->getInputIntcode();
         $computer = new IntcodeComputer();
         $computer->setCode($program);
         $computer->addInput(1);
@@ -17,21 +17,12 @@ class Day09Solver extends AbstractDaySolver
 
     public function part2()
     {
-        $program = $this->getInputFormated();
+        $program = $this->getInputIntcode();
         $computer = new IntcodeComputer();
         $computer->setCode($program);
         $computer->addInput(2);
         $computer->runProgram();
         $output = $computer->getOutput();
         return array_pop($output);
-    }
-
-    /**
-     * @return array
-     */
-    protected function getInputFormated()
-    {
-        $input = $this->puzzle->getInput();
-        return array_map(function ($value){ return (int)$value; }, explode(",", $input));
     }
 }
