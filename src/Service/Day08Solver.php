@@ -53,6 +53,41 @@ class Day08Solver extends AbstractDaySolver
 
     public function part2()
     {
+        $imageData = $this->getInputFormated();
+        $width = 25;
+        $height = 6;
+        $dataCount = count($imageData);
+        $layers = $dataCount / ($width * $height);
+
+        $image = [];
+        for ($l = 0; $l < $layers; $l++) {
+            for ($y = 0; $y < $height; $y++) {
+                for ($x = 0; $x < $width; $x++) {
+                    $p = $y * $width + $x + $width * $height * $l;
+                    $v = $imageData[$p];
+                    $image[$l][$y][$x] = $v;
+                }
+            }
+        }
+
+        $render = '';
+        for ($y = 0; $y < $height; $y++) {
+            for ($x = 0; $x < $width; $x++) {
+                for ($l = 0; $l < $layers; $l++) {
+                    if ($image[$l][$y][$x] != 2) {
+                        if ($image[$l][$y][$x]) {
+                            $render .= '#';
+                        } else {
+                            $render .= ' ';
+                        }
+                        break;
+                    }
+                }
+            }
+            $render .= "\n";
+        }
+
+        return "<pre>$render</pre>";
     }
 
     /**
