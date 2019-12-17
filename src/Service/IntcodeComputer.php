@@ -157,6 +157,11 @@ class IntcodeComputer
         $this->logger->info("Set new Logger!");
     }
 
+    /**
+     * @param bool $pauseOnOutput
+     * @return int|void
+     * @throws \Exception
+     */
     public function runProgram($pauseOnOutput = false)
     {
         $this->logger->info("runProgram");
@@ -193,7 +198,7 @@ class IntcodeComputer
                     $this->addOutPut($p);
                     if ($pauseOnOutput) {
                         $this->p += $skipInstructions;
-                        return;
+                        return $p;
                     }
                     break;
                 case self::OPCODE_JMP_IF_TRUE:
