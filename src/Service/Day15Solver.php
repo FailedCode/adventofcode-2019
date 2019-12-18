@@ -5,12 +5,12 @@ namespace App\Service;
 class Day15Solver extends AbstractDaySolver
 {
     protected const NORTH = 1, SOUTH = 2, WEST = 3, EAST = 4;
-    protected const WALL = 0, SPACE = 1, TARGET = 2;
+    protected const WALL = 0, SPACE = 1, TARGET = 2, O2 = 3;
 
     public function part1()
     {
         list($grid, $x, $y) = $this->generateMap();
-        $map = $this->drawMap($grid);
+//        $map = $this->drawMap($grid);
 
         $path = $this->findPath([0,0], [$x, $y], $grid);
         $this->logger->info("Path: ", $path);
@@ -20,9 +20,66 @@ class Day15Solver extends AbstractDaySolver
 
     public function part2()
     {
+        list($grid, $x, $y) = $this->generateMap(true);
+        list($xMin, $xMax, $yMin, $yMax) = $this->getGridExtrema($grid);
+
+        $grid[$y][$x] = self::O2;
+        $i = 0;
+        $failsave = 1000;
+        while ($this->countSpaces($grid) > 0) {
+            $grid = $this->growO2($grid, $xMin, $xMax, $yMin, $yMax);
+            $i += 1;
+            if ($failsave == $i) {
+                $this->logger->error("Abort O2 propgagation");
+            }
+        }
+
+        // 304 = to low
+        return $i;
     }
 
-    protected function generateMap()
+    /**
+     * @param $grid
+     * @return int
+     */
+    protected function countSpaces($grid)
+    {
+        $spaces = 0;
+        foreach ($grid as $line) {
+            foreach ($line as $value) {
+                if ($value == self::SPACE) {
+                    $spaces += 1;
+                }
+            }
+        }
+        $this->logger->info("Spaces: $spaces");
+        return $spaces;
+    }
+
+    protected function growO2($grid, $xMin, $xMax, $yMin, $yMax)
+    {
+        $newGrid = [];
+        for ($y = $yMin - 1; $y <= $yMax; $y++) {
+            for ($x = $xMin - 1; $x <= $xMax; $x++) {
+                $newGrid[$y][$x] = $grid[$y][$x] ?? 0;
+                $n = $grid[$y-1][$x] ?? self::WALL;
+                $w = $grid[$y][$x+1] ?? self::WALL;
+                $s = $grid[$y+1][$x] ?? self::WALL;
+                $e = $grid[$y][$x-1] ?? self::WALL;
+                if ($newGrid[$y][$x] == self::SPACE && (
+                    $n == self::O2 ||
+                    $w == self::O2 ||
+                    $s == self::O2 ||
+                    $e == self::O2
+                    )) {
+                    $newGrid[$y][$x] = self::O2;
+                }
+            }
+        }
+        return $newGrid;
+    }
+
+    protected function generateMap($dontstop = false)
     {
         $program = $this->getInputIntcode();
         $computer = new IntcodeComputer();
@@ -31,6 +88,8 @@ class Day15Solver extends AbstractDaySolver
         $grid = [];
         $x = 0;
         $y = 0;
+        $tx = 0;
+        $ty = 0;
         $direction = self::NORTH;
         $directionMapR = [self::NORTH => self::WEST, self::WEST => self::SOUTH, self::SOUTH => self::EAST, self::EAST => self::NORTH];
         $directionMapL = array_flip($directionMapR);
@@ -60,20 +119,23 @@ class Day15Solver extends AbstractDaySolver
             }
 
             if ($status == self::TARGET) {
-                break;
+                $tx = $x;
+                $ty = $y;
+                if (!$dontstop) {
+                    break;
+                }
             }
 
             $failsave -= 1;
             if ($failsave == 0) {
                 $this->logger->info("ABORTET");
-                $grid = $this->fillMap($grid);
-                return $this->drawMap($grid);
+                break;
             }
         }
 
         // calculate shortest path between (0,0)-($x,$y)
-        $this->logger->info("Target: $x,$y");
-        return [$this->fillMap($grid), $x, $y];
+        $this->logger->info("Target: $tx,$ty");
+        return [$this->fillMap($grid), $tx, $ty];
     }
 
     /**
@@ -202,7 +264,7 @@ class Day15Solver extends AbstractDaySolver
         return abs($p1[1] - $p2[1]) + abs($p1[0] - $p2[0]);
     }
 
-    protected function fillMap($grid)
+    protected function getGridExtrema($grid)
     {
         $yMin = $xMin = PHP_INT_MAX;
         $yMax = $xMax = PHP_INT_MIN;
@@ -214,6 +276,12 @@ class Day15Solver extends AbstractDaySolver
                 $xMin = min($xMin, $x);
             }
         }
+        return [$xMin, $xMax, $yMin, $yMax];
+    }
+
+    protected function fillMap($grid)
+    {
+        list($xMin, $xMax, $yMin, $yMax) = $this->getGridExtrema($grid);
 
         for ($y = $yMin - 1; $y <= $yMax; $y++) {
             for ($x = $xMin - 1; $x <= $xMax; $x++) {
@@ -226,16 +294,7 @@ class Day15Solver extends AbstractDaySolver
 
     protected function drawMap($grid)
     {
-        $yMin = $xMin = PHP_INT_MAX;
-        $yMax = $xMax = PHP_INT_MIN;
-        foreach ($grid as $y => $line) {
-            $yMax = max($yMax, $y);
-            $yMin = min($yMin, $y);
-            foreach ($line as $x => $element) {
-                $xMax = max($xMax, $x);
-                $xMin = min($xMin, $x);
-            }
-        }
+        list($xMin, $xMax, $yMin, $yMax) = $this->getGridExtrema($grid);
 
         $text = '';
         for ($y = $yMin - 1; $y <= $yMax; $y++) {
@@ -245,6 +304,7 @@ class Day15Solver extends AbstractDaySolver
                     case self::WALL: $v = '#'; break;
                     case self::TARGET: $v = '@'; break;
                     case self::SPACE: $v = ' '; break;
+                    case self::O2: $v = 'O'; break;
                 }
                 if ($y == 0 && $x == 0) {
                     $v = 'D';
