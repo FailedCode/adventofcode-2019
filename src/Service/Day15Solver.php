@@ -60,11 +60,141 @@ class Day15Solver extends AbstractDaySolver
         $this->logger->info("Target: $x,$y");
         $grid = $this->fillMap($grid);
         $map = $this->drawMap($grid);
-        return $map;
+
+        $path = $this->findPath([0,0], [$x, $y], $grid);
+        $this->logger->info("Path: ", $path);
+
+        return count($path);
     }
 
     public function part2()
     {
+    }
+
+    /**
+     * @param int[] $from
+     * @param int[] $to
+     * @param int[] $grid
+     * @return array|bool
+     */
+    protected static function findPath($from, $to, $grid)
+    {
+        $startKey = self::posToKey($from);
+
+        $closedSet = [];
+        $openSet = [];
+        $openSet[$startKey] = $from;
+        $cameFrom = [];
+
+        // weight for start to there
+        $gScore = [];
+        $gScore[$startKey] = 0;
+
+        // weight for target to there
+        $fScore = [];
+        $fScore[$startKey] = self::manhattanDistance($from, $to);
+
+        while (count($openSet)) {
+            $currentKey = self::getMinimalFScore($openSet, $fScore);
+            $current = self::keyToPos($currentKey);
+            if ($current == $to) {
+                if (empty($cameFrom)) {
+                    return false;
+                }
+                $totelPath = [];
+                $totelPath[] = $current;
+                while (isset($cameFrom[$currentKey])) {
+                    $current = $cameFrom[$currentKey];
+                    $currentKey = self::posToKey($current);
+                    if ($startKey == $currentKey) {
+                        break;
+                    }
+                    $totelPath[] = $current;
+                }
+                return array_reverse($totelPath);
+            }
+
+            unset($openSet[$currentKey]);
+            $closedSet[$currentKey] = $current;
+
+            foreach ([[0, -1], [-1, 0], [1, 0], [0, 1]] as $nPos) {
+                $neighbor = [$nPos[0] + $current[0], $nPos[1] + $current[1]];
+                $neighborKey = self::posToKey($neighbor);
+
+                // already evaluated
+                if (isset($closedSet[$neighborKey])) {
+                    continue;
+                }
+
+                // test here if the field actually can be used
+                $neighborGrid = $grid[$neighbor[1]][$neighbor[0]] == self::WALL;
+                if ($neighbor != $to && $neighborGrid != self::WALL) {
+                    $closedSet[$neighborKey] = $neighbor;
+                    continue;
+                }
+
+                // distance from current to neighbor is always 1
+                $tentative_gScore = $gScore[$currentKey] + 1;
+
+
+                // default = infinity
+                $gScoreThing = isset($gScore[$neighborKey]) ? $gScore[$neighborKey] : PHP_INT_MAX;
+                if (!isset($openSet[$neighborKey])) {
+                    // add neighbor to searchable fields
+                    $openSet[$neighborKey] = $neighbor;
+                } elseif ($tentative_gScore >= $gScoreThing) {
+                    // new score is same or bigger
+                    continue;
+                }
+
+                $cameFrom[$neighborKey] = $current;
+                $gScore[$neighborKey] = $tentative_gScore;
+                $fScore[$neighborKey] = $gScore[$neighborKey] + self::manhattanDistance($neighbor, $to);
+            }
+
+        }
+        // no path found!
+        return false;
+    }
+
+    protected static function posToKey($position)
+    {
+        return "{$position[0]},{$position[1]}";
+    }
+
+    protected static function keyToPos($key)
+    {
+        return explode(',', $key);
+    }
+
+
+    /**
+     * Return the node in openSet having the lowest fScore[] value
+     *
+     * @param array $openSet
+     * @param array $fScore
+     * @return string
+     */
+    protected static function getMinimalFScore($openSet, $fScore)
+    {
+        while (count($fScore)) {
+            $key = array_keys($fScore, min($fScore))[0];
+            if (!isset($openSet[$key])) {
+                unset($fScore[$key]);
+            } else {
+                return $key;
+            }
+        }
+    }
+
+    /**
+     * @param $p1
+     * @param $p2
+     * @return float|int
+     */
+    protected static function manhattanDistance($p1, $p2)
+    {
+        return abs($p1[1] - $p2[1]) + abs($p1[0] - $p2[0]);
     }
 
     protected function fillMap($grid)
