@@ -9,6 +9,21 @@ class Day15Solver extends AbstractDaySolver
 
     public function part1()
     {
+        list($grid, $x, $y) = $this->generateMap();
+        $map = $this->drawMap($grid);
+
+        $path = $this->findPath([0,0], [$x, $y], $grid);
+        $this->logger->info("Path: ", $path);
+
+        return count($path);
+    }
+
+    public function part2()
+    {
+    }
+
+    protected function generateMap()
+    {
         $program = $this->getInputIntcode();
         $computer = new IntcodeComputer();
         $computer->setCode($program);
@@ -58,17 +73,7 @@ class Day15Solver extends AbstractDaySolver
 
         // calculate shortest path between (0,0)-($x,$y)
         $this->logger->info("Target: $x,$y");
-        $grid = $this->fillMap($grid);
-        $map = $this->drawMap($grid);
-
-        $path = $this->findPath([0,0], [$x, $y], $grid);
-        $this->logger->info("Path: ", $path);
-
-        return count($path);
-    }
-
-    public function part2()
-    {
+        return [$this->fillMap($grid), $x, $y];
     }
 
     /**
